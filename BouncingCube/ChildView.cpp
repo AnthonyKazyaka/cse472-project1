@@ -33,6 +33,7 @@ CChildView::~CChildView()
 BEGIN_MESSAGE_MAP(CChildView, CShaderWnd)
 	ON_WM_KEYDOWN()
 	ON_WM_TIMER()
+	ON_WM_KEYUP()
 END_MESSAGE_MAP()
 
 
@@ -156,12 +157,14 @@ void CChildView::InitGL()
 	// Enable blending
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 }
 
 void CChildView::RenderGL()
 {
 	// Clear the screen
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+
 
 	glUniformMatrix4fv(m_nPVM, 1, GL_FALSE, value_ptr(m_mPVM));
 	glUniformMatrix4fv(m_nVM, 1, GL_FALSE, value_ptr(m_mVM));
@@ -176,6 +179,7 @@ void CChildView::RenderGL()
 
 	glUniform4fv(glGetUniformLocation(m_program, "AmbientProduct"), 1, value_ptr(ambient_product));
 	glUniform1i( glGetUniformLocation(m_program, "diffuse_mat"), 0);
+
 	m_cube->RenderGL(m_program);
 	ambient_product = light_ambient*material_transpartent;
 	glUniform1i( glGetUniformLocation(m_program, "diffuse_mat"), 2);
@@ -192,27 +196,57 @@ void CChildView::CleanGL()
 
 void CChildView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
-	switch (nChar) {
-	case 'r':
-	case 'R':
-		ResetMatrix();
-		break;
-	case VK_SPACE:
-		if (m_nTimer==-1) {
-			m_nTimer = SetTimer(1, 40, NULL);
-		} else {
-			KillTimer(m_nTimer);
-			m_nTimer = -1;
-		}
+	switch (nChar) 
+	{
+		case 'r':
+		case 'R':
+			
+			m_cube->v = vec3(15.0, 0., 0.);
+			m_cube->w = vec3(1., 1., 1.);
+			m_cube->c *= 0;
+			m_cube->q.w = 0;
+			//m_cube->
+			ResetMatrix();
+			break;
+		case VK_SPACE:
+			if (m_nTimer==-1) {
+				m_nTimer = SetTimer(1, 40, NULL);
+			} else {
+				KillTimer(m_nTimer);
+				m_nTimer = -1;
+			}
+			break;
+		case VK_UP:
+			break;
+		case VK_DOWN:
+			break;
+		case VK_RIGHT:
+			break;
+		case VK_LEFT:
+			break;
 	}
 	CShaderWnd::OnKeyDown(nChar, nRepCnt, nFlags);
 }
 
 
+void CChildView::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
+{
+	// TODO: Add your message handler code here and/or call default
+
+	CShaderWnd::OnKeyUp(nChar, nRepCnt, nFlags);
+}
+
 void CChildView::OnTimer(UINT_PTR nIDEvent)
 {
 	m_cube->Update(0.04);
+	//if(m_bDragging)
+
+	vec4 downV4 = vec4(0,-1,0,0) * m_mModel;
+
+	vec3 v = glm::normalize(vec3(downV4.x, downV4.y, downV4.z));
+	m_cube->SetDown(v);
 	Invalidate();
 
 	CShaderWnd::OnTimer(nIDEvent);
 }
+
