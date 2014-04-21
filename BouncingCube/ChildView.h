@@ -22,7 +22,7 @@ public:
 	float m_fT;
 
 private:
-	CGrTexture m_brick;
+	//CGrTexture m_brick;
 
 // Operations
 public:
