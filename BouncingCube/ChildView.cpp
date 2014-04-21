@@ -20,7 +20,7 @@ CChildView::CChildView()
 	m_fT = 0.f;
 	m_cube = new CCube(0.5);
 	m_wall = new CCube(10, false);
-//	m_brick.LoadFile(L"textures/brick.bmp");
+	m_brick.LoadFile(L"textures/brick.bmp");
 }
 
 CChildView::~CChildView()
@@ -114,7 +114,7 @@ void CChildView::InitGL()
 	glActiveTexture( GL_TEXTURE2 );
 	glEnable(GL_TEXTURE_2D);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-//	glBindTexture(GL_TEXTURE_2D, m_brick.TexName());
+	glBindTexture(GL_TEXTURE_2D, m_brick.TexName());
 
 
 	m_cube->InitGL(m_program);
